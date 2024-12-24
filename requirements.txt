@@ -1,0 +1,6 @@
+requests
+arcgis
+pandas
+matplotlib
+geopandas
+jupyterlab
