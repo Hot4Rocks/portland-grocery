@@ -2,6 +2,7 @@
 This project aims to assess and visualize grocery store accessibility in Portland, Oregon, by providing a scoring system for address-based grocery proximity and creating interactive heatmaps to highlight underserved areas. The goal is to shed light on gaps in grocery accessibility and help inform community-focused investments.
 
 ## Structure
+```
 portland-grocery/
 ├── data/
 │   ├── grocery_stores.csv       # Data containing grocery store locations
@@ -13,6 +14,7 @@ portland-grocery/
 ├── venv/                        # Virtual environment folder
 ├── requirements.txt             # Project dependencies
 ├── README.md                    # Project documentation
+```
 
 
 ## Requirements
