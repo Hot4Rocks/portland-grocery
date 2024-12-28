@@ -1,4 +1,4 @@
-# Portland Grocery Accessibility Project
+# Portland Grocery Accessibility
 This project aims to assess and visualize grocery store accessibility in Portland, Oregon, by providing a scoring system for address-based grocery proximity and creating interactive heatmaps to highlight underserved areas. The goal is to shed light on gaps in grocery accessibility and help inform community-focused investments.
 
 ## Structure
