@@ -11,7 +11,6 @@ portland-grocery/
 ├── scripts/
 │   ├── grocery_score.py         # Script for calculating grocery accessibility scores
 │   ├── arcgis_hub_map.py        # Script for creating and interacting with ArcGIS Hub maps
-├── venv/                        # Virtual environment folder
 ├── requirements.txt             # Project dependencies
 ├── README.md                    # Project documentation
 ```
