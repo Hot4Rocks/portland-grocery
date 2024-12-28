@@ -16,8 +16,13 @@ portland-grocery/
 ├── README.md                    # Project documentation
 ```
 
-
 ## Requirements
 Install dependencies using:
 `pip install -r requirements.txt`
+
+## Environment Variables
+Set the following environment variables for ArcGIS API access:
+- `ARCGIS_ACCESS_TOKEN`: Your ArcGIS access token
+- `ARCGIS_USERNAME`: Your ArcGIS username
+- `ARCGIS_PASSWORD`: Your ArcGIS password
 
