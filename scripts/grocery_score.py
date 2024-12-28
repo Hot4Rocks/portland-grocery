@@ -4,6 +4,28 @@
 # Geocode the Portland address into latitude and longitude
 from arcgis.geocoding import geocode
 from arcgis.gis import GIS
+import requests
+import os
+
+# ArcGIS Places API Configuration
+BASE_URL = "https://places-api.arcgis.com/arcgis/rest/services/places-service/v1"
+ACCESS_TOKEN = os.getenv("ARCGIS_ACCESS_TOKEN")  # Store your access token as an environment variable
+HEADERS = {"Authorization": f"Bearer {ACCESS_TOKEN}"}
+
+# Helper function to call ArcGIS Places API
+def find_nearby_groceries(lat, lon, radius=5000):
+    url = f"{BASE_URL}/places/near-point"
+    params = {
+        "location": f"{lat},{lon}",
+        "categories": "100-02-00",  # Example category ID for grocery stores
+        "radius": radius,
+    }
+    response = requests.get(url, headers=HEADERS, params=params)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        print(f"Error: {response.status_code} - {response.text}")
+        return None
 
 def get_coordinates(address):
     gis = GIS()
@@ -22,7 +44,10 @@ def calculate_distance_score(address_coords, grocery_data):
     if address_coords == (None, None):
         return "Invalid Address"
     user_point = Point(address_coords)
-    grocery_points = gpd.points_from_xy(grocery_data['longitude'], grocery_data['latitude'])
+    grocery_points = gpd.points_from_xy(
+        [place["geometry"]["x"] for place in grocery_data["features"]],
+        [place["geometry"]["y"] for place in grocery_data["features"]]
+    )
     grocery_geoseries = gpd.GeoSeries(grocery_points)
     nearest_geom = nearest_points(user_point, grocery_geoseries.unary_union)[1]
     min_distance = user_point.distance(nearest_geom)
@@ -32,6 +57,19 @@ def calculate_distance_score(address_coords, grocery_data):
 
 
 # Combine Address Input and Distance Score:
-def grocery_accessibility_score(address, grocery_data):
+def grocery_accessibility_score(address):
     coords = get_coordinates(address)
+    if coords == (None, None):
+        return "Invalid Address"
+
+    # Use ArcGIS Places API to fetch nearby grocery data
+    grocery_data = find_nearby_groceries(coords[0], coords[1])
+    if not grocery_data:
+        return "Error fetching grocery data"
+
     return calculate_distance_score(coords, grocery_data)
+
+if __name__ == "__main__":
+    test_address = "Your Test Address Here"
+    score = grocery_accessibility_score(test_address)
+    print(f"Grocery Accessibility Score: {score}")
