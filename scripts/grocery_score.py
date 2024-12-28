@@ -16,6 +16,7 @@ def get_coordinates(address):
 # Calculate the distance from the input address to the nearest grocery store
 import geopandas as gpd
 from shapely.geometry import Point
+from shapely.ops import nearest_points
 
 def calculate_distance_score(address_coords, grocery_data):
     if address_coords == (None, None):
@@ -23,12 +24,11 @@ def calculate_distance_score(address_coords, grocery_data):
     user_point = Point(address_coords)
     grocery_points = gpd.points_from_xy(grocery_data['longitude'], grocery_data['latitude'])
     grocery_geoseries = gpd.GeoSeries(grocery_points)
-    distances = grocery_geoseries.distance(user_point)
-    min_distance = distances.min()
+    nearest_geom = nearest_points(user_point, grocery_geoseries.unary_union)[1]
+    min_distance = user_point.distance(nearest_geom)
 
     # Convert distance to a 1-10 score (example scaling)
-    score = max(1, 10 - int(min_distance / 1000))
-    return score
+    return max(1, 10 - int(min_distance / 1000))
 
 
 # Combine Address Input and Distance Score:
