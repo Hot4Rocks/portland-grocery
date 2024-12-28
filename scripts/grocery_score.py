@@ -18,6 +18,8 @@ import geopandas as gpd
 from shapely.geometry import Point
 
 def calculate_distance_score(address_coords, grocery_data):
+    if address_coords == (None, None):
+        return "Invalid Address"
     user_point = Point(address_coords)
     grocery_points = gpd.points_from_xy(grocery_data['longitude'], grocery_data['latitude'])
     grocery_geoseries = gpd.GeoSeries(grocery_points)
@@ -32,7 +34,4 @@ def calculate_distance_score(address_coords, grocery_data):
 # Combine Address Input and Distance Score:
 def grocery_accessibility_score(address, grocery_data):
     coords = get_coordinates(address)
-    if coords:
-        return calculate_distance_score(coords, grocery_data)
-    else:
-        return "Invalid Address"
+    return calculate_distance_score(coords, grocery_data)

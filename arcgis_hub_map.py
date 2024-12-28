@@ -6,7 +6,11 @@ def display_map():
     gis = GIS("https://www.arcgis.com", "user_name", "password")
 
     # Search for your map by title
-    webmap_item = gis.content.search("Portland Grocery Heatmap", item_type="Web Map")[0]
+    search_results = gis.content.search("Portland Grocery Heatmap", item_type="Web Map")
+    if not search_results:
+        return "Map not found"
+    
+    webmap_item = search_results[0]
 
     # Load the map
     webmap = WebMap(webmap_item)
@@ -16,4 +20,7 @@ def display_map():
 
 if __name__ == "__main__":
     map_view = display_map()
-    print("Heatmap loaded successfully.")
+    if isinstance(map_view, str):
+        print(map_view)
+    else:
+        print("Heatmap loaded successfully.")
