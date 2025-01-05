@@ -1,10 +1,14 @@
 from arcgis.gis import GIS
 from arcgis.mapping import WebMap
+from dotenv import load_dotenv
 import os
+
+# Load environment variables from the .env file
+load_dotenv()
 
 def display_map():
     try:
-        # Connect to ArcGIS Hub
+        # Connect to ArcGIS Hub using environment variables
         gis = GIS("https://www.arcgis.com", os.getenv("ARCGIS_USERNAME"), os.getenv("ARCGIS_PASSWORD"))
 
         # Search for your map by title

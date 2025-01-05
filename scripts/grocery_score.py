@@ -1,15 +1,21 @@
 # Script to calculate grocery accessibility score
 
-
 # Geocode the Portland address into latitude and longitude
 from arcgis.geocoding import geocode
 from arcgis.gis import GIS
+from dotenv import load_dotenv
 import requests
 import os
+import geopandas as gpd
+from shapely.geometry import Point
+from shapely.ops import nearest_points
+
+# Load environment variables from the .env file
+load_dotenv()
 
 # ArcGIS Places API Configuration
 BASE_URL = "https://places-api.arcgis.com/arcgis/rest/services/places-service/v1"
-ACCESS_TOKEN = os.getenv("ARCGIS_ACCESS_TOKEN")  # Store your access token as an environment variable
+ACCESS_TOKEN = os.getenv("ARCGIS_ACCESS_TOKEN")  # Load access token from the .env file
 HEADERS = {"Authorization": f"Bearer {ACCESS_TOKEN}"}
 
 # Helper function to call ArcGIS Places API
@@ -28,7 +34,7 @@ def find_nearby_groceries(lat, lon, radius=5000):
         return None
 
 def get_coordinates(address):
-    gis = GIS()
+    gis = GIS("https://www.arcgis.com", os.getenv("ARCGIS_USERNAME"), os.getenv("ARCGIS_PASSWORD"))
     result = geocode(address)
     if result:
         location = result[0]['location']
@@ -36,10 +42,6 @@ def get_coordinates(address):
     return None, None
 
 # Calculate the distance from the input address to the nearest grocery store
-import geopandas as gpd
-from shapely.geometry import Point
-from shapely.ops import nearest_points
-
 def calculate_distance_score(address_coords, grocery_data):
     if address_coords == (None, None):
         return "Invalid Address"
@@ -54,7 +56,6 @@ def calculate_distance_score(address_coords, grocery_data):
 
     # Convert distance to a 1-10 score (example scaling)
     return max(1, 10 - int(min_distance / 1000))
-
 
 # Combine Address Input and Distance Score:
 def grocery_accessibility_score(address):
